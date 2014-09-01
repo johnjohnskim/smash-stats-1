@@ -3,7 +3,7 @@ var conn = require('./auth');
 
 var sql = {};
 
-function makeQuery(query, args, callback) {
+function makeQuery(query, args, response, callback) {
   if (!args || !args.length) { args = null; }
   pg.connect(conn, function(err, client, done) {
     if (err) {
@@ -11,8 +11,10 @@ function makeQuery(query, args, callback) {
     }
     client.query(query, args, function(err, result) {
       done();
+      // if error, override callback and end response
       if (err) {
-        return console.error('error running query', err);
+        console.error('error running query', err);
+        response.end(err.message);
       } else {
         callback(err, result);
       }
@@ -21,17 +23,24 @@ function makeQuery(query, args, callback) {
 }
 sql.query = makeQuery;
 
-sql.getRows = function(query, args, callback) {
-  makeQuery(query, args, function(err, result) {
+sql.getRows = function(query, args, response, callback) {
+  makeQuery(query, args, response, function(err, result) {
     callback(err, result.rows);
   })
 }
 
-sql.insert = function(query, args, callback) {
+sql.getRow = function(query, args, response, callback) {
+  makeQuery(query, args, response, function(err, result) {
+    callback(err, result.rows[0]);
+  })
+}
+
+
+sql.insert = function(query, args, response, callback) {
   if (!query.match(/RETURNING/i)) {
     query += ' RETURNING id';
   }
-  makeQuery(query, args, function(err, result) {
+  makeQuery(query, args, response, function(err, result) {
     callback(err, result.rows[0]);
   })
 }

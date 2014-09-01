@@ -13,32 +13,31 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// config
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// routes
 app.use('/api', api);
 app.use('/', index);
 
 // error handlers
-
 // 404
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
-
-// development error handler
+// dev error handler
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.end('Status: ' + err.status + '\n' + err.stack);
   });
 }
-
-// production error handler
+// prod error handler
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.end(err.message);
@@ -47,7 +46,6 @@ app.use(function(err, req, res, next) {
 // module.exports = app;
 
 app.set('port', process.env.PORT || 8080);
-
 var server = app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + server.address().port);
 });

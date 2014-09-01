@@ -13,7 +13,7 @@ router.use(function(req, res, next) {
 // PLAYERS
 router.route('/players')
   .get(function(req, res) {
-    sql.getRows("SELECT * FROM players", null, function(err, rows) {
+    sql.getRows("SELECT * FROM players", null, res, function(err, rows) {
       res.json(rows);
     });
   })
@@ -22,15 +22,15 @@ router.route('/players')
     if (!name) {
       return res.end('Need a name');
     }
-    sql.insert("INSERT INTO players (name) VALUES ($1)", [req.body.name], function(err, id) {
+    sql.insert("INSERT INTO players (name) VALUES ($1)", [req.body.name], res, function(err, id) {
       res.json(id);
     });
   })
 
 router.route('/players/:pid')
   .get(function(req, res) {
-    sql.getRows("SELECT * FROM players WHERE id=$1", [req.params.pid], function(err, rows) {
-      res.json(rows[0]);
+    sql.getRow("SELECT * FROM players WHERE id=$1", [req.params.pid], res, function(err, row) {
+      res.json(row);
     });
   })
   .put(function(req, res) {
@@ -38,39 +38,55 @@ router.route('/players/:pid')
     if (!name) {
       return res.end('Need a name');
     }
-    sql.query("UPDATE players SET name=$1 WHERE id=$2", [req.body.name, req.params.pid], function(err, id) {
+    sql.query("UPDATE players SET name=$1 WHERE id=$2", [req.body.name, req.params.pid], res, function(err) {
       res.end('ok');
     });
   })
 
+// FIGHTS
+var fightFields = {
+  p1: 'player1', p2: 'player2', p3: 'player3', p4: 'player4',
+  c1: 'character1', c2: 'character2', c3: 'character3', c4: 'character4',
+  stage: 'stage', winner: 'winner', notes: 'notes'
+};
 router.route('/fights')
   .get(function(req, res) {
-    sql.getRows("SELECT * FROM fights", null, function(err, rows) {
+    sql.getRows("SELECT * FROM fights", null, res, function(err, rows) {
       res.json(rows);
     });
   })
   .post(function(req, res) {
-    var name = req.body.name;
-    if (!name) {
-      return res.end('Need a name');
+    if (!req.body.stage || !req.body.winner) {
+      return res.end('Need a ' + (!req.body.stage ? 'stage' : 'winner'));
     }
-    sql.insert("INSERT INTO u_fights (name) VALUES ($1)", [req.body.name], function(err, id) {
-      res.json(id);
+    var fields = Object.keys(fightFields);
+    var fieldStr = '(' + fields.map(function(f) { return fightFields[f]; }).join(',') + ')';
+    var args = fields.map(function(a) { return req.body[a]; });
+    var argStr = '(' + fields.map(function(a, i) { return '$' + (i+1); }).join(',') + ')';
+    sql.insert("INSERT INTO u_fights " + fieldStr + " VALUES " + argStr, args, res, function(err, id) {
+        res.json(id);
     });
   })
 
 router.route('/fights/:fid')
   .get(function(req, res) {
-    sql.getRows("SELECT * FROM fights WHERE id=$1", [req.params.fid], function(err, rows) {
-      res.json(rows[0]);
+    sql.getRow("SELECT * FROM fights WHERE id=$1", [req.params.fid], res, function(err, row) {
+      res.json(row);
     });
   })
   .put(function(req, res) {
-    var name = req.body.name;
-    if (!name) {
-      return res.end('Need a name');
+    var fields = Object.keys(fightFields);
+    var field, value;
+    fields.forEach(function(f) {
+      if (req.body[f]) {
+        field = fightFields[f];
+        value = req.body[f];
+      }
+    });
+    if (!field) {
+      res.end('invalid field');
     }
-    sql.query("UPDATE players SET name=$1 WHERE id=$2", [req.body.name, req.params.pid], function(err, id) {
+    sql.query("UPDATE u_fights SET "+field+"=$1 WHERE id=$2", [value, req.params.fid], res, function(err) {
       res.end('ok');
     });
   })
@@ -83,7 +99,7 @@ var views = ['stages', 'stagewins',
 views.forEach(function(v) {
   router.route('/' + v)
     .get(function(req, res) {
-      sql.getRows("SELECT * FROM " + v, null, function(err, rows) {
+      sql.getRows("SELECT * FROM " + v, null, res, function(err, rows) {
         res.json(rows);
       });
     })
