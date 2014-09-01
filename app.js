@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 
 var api = require('./routes/api');
 var tables = require('./routes/tables');
+var fights = require('./routes/fights');
 var index = require('./routes/index');
 
 var app = express();
@@ -23,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // routes
 app.use('/api', api);
 app.use('/tables', tables);
+app.use('/fights', fights);
 app.use('/', index);
 
 // error handlers
