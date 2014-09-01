@@ -1,16 +1,19 @@
-h1= title
-table
-  thead
-    th #{type} 1
-    th #{type} 2
-    th Total Games
-    th Wins
-    th Win %
-  tbody
-    each d in data
-      tr
-        td= d.pname1 || d.cname1
-        td= d.pname2 || d.cname2
-        td= d.total 
-        td= d.wins 
-        td= d.winpct
+extends layout
+
+block content
+  h1= title
+  table
+    thead
+      th #{type} 1
+      th #{type} 2
+      th Total Games
+      th Wins
+      th Win %
+    tbody
+      each d in data
+        tr
+          td= d.pname1 || d.cname1
+          td= d.pname2 || d.cname2
+          td= d.total 
+          td= d.wins 
+          td= d.winpct
