@@ -5,8 +5,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var api = require('./routes/api');
+var index = require('./routes/index');
 
 var app = express();
+
+// views
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -14,6 +19,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', api);
+app.use('/', index);
 
 // error handlers
 
