@@ -1,0 +1,16 @@
+h1= title
+table
+  thead
+    th Player
+    th= type
+    th Total Games
+    th Wins
+    th Win %
+  tbody
+    each d in data
+      tr
+        td= d.playername
+        td= d.charactername || d.stagename
+        td= d.total 
+        td= d.wins 
+        td= d.winpct
