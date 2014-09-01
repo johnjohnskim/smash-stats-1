@@ -1,5 +1,5 @@
 var pg = require('pg');
-***REMOVED***
+var conn = require('./auth');
 
 var sql = {};
 

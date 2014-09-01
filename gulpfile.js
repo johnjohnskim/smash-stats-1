@@ -3,8 +3,9 @@ var nodemon = require('gulp-nodemon');
 
 gulp.task('server', function() {
   nodemon({
-    script: 'server.js',
-    ext: 'js'
+    script: 'app.js',
+    ext: 'js',
+    env: {'NODE_ENV': 'development'}
   }).on('restart', function() {
     console.log('restarting...');
   })

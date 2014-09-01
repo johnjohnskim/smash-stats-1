@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "",
-    "start": "node server.js"
+    "start": ""
   },
   "repository": {
     "type": "git",
