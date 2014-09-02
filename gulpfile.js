@@ -14,17 +14,21 @@ gulp.task('less', function() {
     .pipe(gulp.dest('./public/css'))
 });
 
-gulp.task('react', function() {
-  gulp.src('react/*.jsx')
-    .pipe(react())
-    .pipe(gulp.dest('./public/js'))
-});
+// gulp.task('react', function() {
+//   gulp.src('react/*.jsx')
+//     .pipe(react())
+//     .pipe(gulp.dest('./public/js'))
+// });
 
 gulp.task('reactify', function() {
-  gulp.src('react/*.js', {read: false})
+  gulp.src('react/*.jsx', {read: false})
     .pipe(browserify({
       transform: ['reactify'],
-      extensions: ['.js'],
+      extensions: ['.jsx'],
+    }))
+    .pipe(rename(function(path) {
+      path.basename += '-bundle';
+      path.extname = '.js';
     }))
     .pipe(gulp.dest('public/js'))
 });
@@ -33,6 +37,7 @@ gulp.task('server', function() {
   nodemon({
     script: 'app.js',
     ext: 'js',
+    ignore: ['public/**'],
     env: {'NODE_ENV': 'development'}
   }).on('restart', function() {
     console.log('restarting...');
@@ -42,10 +47,10 @@ gulp.task('server', function() {
 gulp.task('watch', function() {
   livereload.listen();
   gulp.watch(['./less/*.less'], ['less']);
-  gulp.watch(['./react/*.js'], ['reactify']);
+  gulp.watch(['./react/*.jsx'], ['reactify']);
   // gulp.watch(['./react/*.jsx'], ['react']);
-  gulp.watch(['./less/**', './react/**', './views/**'])
-    .on('change', livereload.changed);
+  gulp.watch(['./public/**'])
+    .on('change', livereload.changed)
 })
 
 gulp.task('default', ['watch', 'less', 'reactify', 'server']);
