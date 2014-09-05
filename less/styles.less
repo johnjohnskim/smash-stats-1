@@ -10,8 +10,15 @@ body {
   &:hover {
     opacity: 1;
   }
+}
+.stage {
+  height: 125px;
+  width: 125px;
+  position: relative;
   &.selected {
-    outline: 2px solid @red;
+    outline: 4px solid @red;
+    opacity: 1;
+    z-index: 2;
   }
 }
 
@@ -39,11 +46,6 @@ body {
     top: @bottom;
     left: @right;
   }
-}
-
-.stage {
-  height: 125px;
-  width: 125px;
 }
 
 .player {

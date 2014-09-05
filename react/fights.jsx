@@ -15,7 +15,7 @@ var App = React.createClass({
         this.setState({
           playerData: players, 
           characterData: characters, 
-          stageData: stages, 
+          stageData: stages
         });
       }.bind(this));
   },
@@ -70,6 +70,7 @@ var App = React.createClass({
     });
   },
   selectStage: function(s) {
+    s = _.find(this.state.stageData, {img: s}).id;
     this.setState({
       stage: s 
     });
@@ -82,9 +83,10 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="app">
-        <Characters data={this.state.characterData} selected={this.state.characters} addCharacter={this.addCharacter} removeCharacter={this.removeCharacter} resetCharacters={this.resetCharacters} />
-        <Players data={this.state.playerData} selected={this.state.players} addPlayer={this.addPlayer} removePlayer={this.removePlayer} resetPlayers={this.resetPlayers} />
-        <Stages data={this.state.stageData} selected={this.state.stage} />
+        <Characters data={this.state.characterData} selected={this.state.characters} addCharacter={this.addCharacter} />
+        <Players data={this.state.playerData} addPlayer={this.addPlayer} />
+        <Summaries data={this.state.playerData} characterData={this.state.characterData} selected={this.state.players} selectedChars={this.state.characters} />
+        <Stages data={this.state.stageData} selected={this.state.stage} selectStage={this.selectStage} />
       </div>
     );
   }
@@ -96,9 +98,7 @@ var Character = React.createClass({
   },
   render: function() {
     var selects = this.props.players.map(function(p) {
-      return (
-        <Select player={p} />
-      );
+      return (<Select player={p} />);
     });
     var classes = "character " + (this.props.classes || '')
     return (
@@ -110,6 +110,8 @@ var Character = React.createClass({
   }
 });
 
+// TODO - refactor characters and stages to use id lists, instead of img lists
+//      at the very least, each character component should have all the self-contained/relevant data
 var Characters = React.createClass({
   render: function() {
     var chars = [
@@ -151,30 +153,54 @@ var Characters = React.createClass({
 });
 
 var Player = React.createClass({
+  handleClick: function() {
+    this.props.addPlayer(this.props.data.id);
+  },
   render: function() {
+    return (
+      <button onClick={this.handleClick}>{this.props.data.name}</button>
+    );
+  }
+});
+
+var Players = React.createClass({
+  render: function() {
+    if (this.props.data.length) debugger;
+    return (
+      <div>{ this.props.data.map(function(p) {return (<Player data={p} addPlayer={this.props.addPlayer} />);}.bind(this)) }</div>
+    );
+  }
+})
+
+var Summary = React.createClass({
+  render: function() {
+    var character = this.props.char ? <Character name={this.props.char} players={[]} classes="playerChar" /> : null
     return (
       <div className="playerBox box">
         <img src={'img/players/'+this.props.id+'-display.png'} className="player" />
-        <Character name="falco" players={[]} classes="playerChar" />
+        {character}
         <span className="playerText">{this.props.name}</span>
       </div>
     );
   }
 })
-var Players = React.createClass({
+var Summaries = React.createClass({
   render: function() {
     var players = ['p1', 'p2', 'p3', 'p4'];
     var selectedPlayers = this.props.selected.map(function(s) {
       return _.find(this.props.data, {id: s}).name; 
     }.bind(this));
-    players = _.zip(players, selectedPlayers);
+    var selectedChars = this.props.selectedChars.map(function(s) {
+      return _.find(this.props.characterData, {id: s}).img; 
+    }.bind(this));
+    players = _.zip(players, selectedPlayers, selectedChars);
 
-    function makePlayer(p) {
-      return (<Player id={p[0]} name={p[1]}/>);
+    function makeSummary(p) {
+      return (<Summary id={p[0]} name={p[1]} char={p[2]} />);
     }
     return (
       <div className="players">
-        { players.map(makePlayer) }
+        { players.map(makeSummary) }
       </div>
     );
   }
@@ -190,10 +216,13 @@ var Select = React.createClass({
 })
 
 var Stage = React.createClass({
+  handleClick: function() {
+    this.props.selectStage(this.props.name);
+  },
   render: function() {
     var classes = "stage " + (this.props.selected ? 'selected' : '');
     return (
-      <img src={'img/stages/'+this.props.name+'.jpg'} className={classes} />
+      <img src={'img/stages/'+this.props.name+'.jpg'} className={classes} onClick={this.handleClick} />
     );
   }
 });
@@ -201,7 +230,7 @@ var Stages = React.createClass({
   render: function() {
     var stages = [
       ['icicle-mountain', 'princess-peachs-castle', 'kongo-jungle', 'great-bay', 'yoshis-story', 'fountain-of-dreams', 'corneria'],
-      ['rainbow-cruise', 'jungle-japes', 'hyrule-temple', 'yoshis-island', 'green-greens', 'venom', 'flatzone'],
+      ['rainbow-cruise', 'jungle-japes', 'temple', 'yoshis-island', 'green-greens', 'venom', 'flat-zone'],
       ['brinstar', 'onett', 'mute-city', 'pokemon-stadium', 'kingdom'],
       ['brinstar-depths', 'fourside', 'big-blue', 'poke-floats', 'kingdom-ii'],
       ['battlefield', 'final-destination', 'past-dream-land', 'past-yoshis-island', 'past-kongo-jungle']
@@ -209,15 +238,16 @@ var Stages = React.createClass({
     var selectedStage =  this.props.selected ? _.find(this.props.data, {id: this.props.selected}).img : null;
 
     function makeStage(s) {
-      return (<Stage name={s} selected={selectedStage == s}/>);
+      return (<Stage name={s} selected={selectedStage == s} selectStage={this.props.selectStage} />);
     }
+    boundMakeStage = makeStage.bind(this);
     function makeStageRow(row, i) {
       var styles = {
         'padding-left': (i >= 2 ? 125 : 0)
       };
       return (
         <div className="characterRow" style={styles}>
-          {row.map(makeStage)}
+          {row.map(boundMakeStage)}
         </div>
       );
     }
