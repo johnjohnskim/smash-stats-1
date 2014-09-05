@@ -1,13 +1,15 @@
 CREATE TABLE u_characters
 (
   id serial PRIMARY KEY,
-  name varchar(50) NOT NULL
+  name varchar(50) NOT NULL,
+  img varchar(25)
 );
 
 CREATE TABLE u_stages
 (
   id serial PRIMARY KEY,
-  name varchar(50) NOT NULL
+  name varchar(50) NOT NULL,
+  img varchar(35)
 );
 
 CREATE TABLE u_players
