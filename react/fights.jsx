@@ -5,6 +5,14 @@
 var queue = require('queue-async');
 var $ = require('jquery');
 
+function getData(url) {
+  return function(callback) {
+    $.getJSON(url, {}, function(data) {
+      callback(null, data);
+    });
+  }
+}
+
 var App = React.createClass({
   componentDidMount: function() {
     queue()
@@ -26,8 +34,8 @@ var App = React.createClass({
       stageData: [],
       players: [],
       characters: [],
-      stage: '',
-      winner: ''
+      stage: 0,
+      winner: 0
     };
   },
   addPlayer: function(p) {
@@ -46,11 +54,11 @@ var App = React.createClass({
   },
   resetPlayers: function() {
     this.setState({
-      players: []
+      players: [],
+      winner: 0
     });
   },
   addCharacter: function(c) {
-    c = _.find(this.state.characterData, {img: c}).id;
     if (this.state.characters.length < 4) {
       this.setState({
         characters: this.state.characters.concat([c])
@@ -66,11 +74,11 @@ var App = React.createClass({
   },
   resetCharacters: function() {
     this.setState({
-      characters: []
+      characters: [],
+      winner: 0
     });
   },
   selectStage: function(s) {
-    s = _.find(this.state.stageData, {img: s}).id;
     this.setState({
       stage: s 
     });
@@ -83,9 +91,13 @@ var App = React.createClass({
   render: function() {
     return (
       <div className="app">
+        <Buttons reset={this.resetCharacters} back={this.removeCharacter} />
         <Characters data={this.state.characterData} selected={this.state.characters} addCharacter={this.addCharacter} />
+        <Buttons reset={this.resetPlayers} back={this.removePlayer} />
         <Players data={this.state.playerData} addPlayer={this.addPlayer} />
-        <Summaries data={this.state.playerData} characterData={this.state.characterData} selected={this.state.players} selectedChars={this.state.characters} />
+        <Summaries playerData={this.state.playerData} selectedPlayers={this.state.players} 
+                   characterData={this.state.characterData} selectedChars={this.state.characters} 
+                   winner={this.state.winner} selectWinner={this.selectWinner} />
         <Stages data={this.state.stageData} selected={this.state.stage} selectStage={this.selectStage} />
       </div>
     );
@@ -94,53 +106,61 @@ var App = React.createClass({
 
 var Character = React.createClass({
   handleClick: function() {
-    this.props.addCharacter(this.props.name);
+    if (!this.props.summary) {
+      this.props.addCharacter(this.props.data.id);
+    }
   },
   render: function() {
-    var selects = this.props.players.map(function(p) {
-      return (<Select player={p} />);
+    var cx = React.addons.classSet;
+    var selects = this.props.players.map(function(p, i) {
+      return (<Select key={i} player={p} />);
     });
-    var classes = "character " + (this.props.classes || '')
+    var classes = cx({
+      'character': true,
+      'summaryChar': this.props.summary,
+      'selected': selects.length
+    });
     return (
-      <div className="characterBox box">
-        <img src={'img/characters/'+this.props.name+'.png'} className={classes} onClick={this.handleClick} />
+      <div className="characterBox box" onClick={this.handleClick}>
+        <img src={'img/characters/'+this.props.data.img+'.png'} className={classes} />
         {selects}
       </div>
     );
   }
 });
 
-// TODO - refactor characters and stages to use id lists, instead of img lists
-//      at the very least, each character component should have all the self-contained/relevant data
 var Characters = React.createClass({
   render: function() {
+    if (!this.props.data.length) {
+      return (<div />);
+    }
     var chars = [
       ['drmario', 'mario', 'luigi', 'bowser', 'peach', 'yoshi', 'dk', 'cfalcon', 'ganondorf'],
       ['falco', 'fox', 'ness', 'iceclimbers', 'kirby', 'samus', 'zelda', 'link', 'younglink'],
       ['pichu', 'pikachu', 'jigglypuff', 'mewtwo', 'mrgamewatch', 'marth', 'roy']
     ];
-    var selectedChars = this.props.selected.map(function(s) {
-      return _.find(this.props.data, {id: s}).img; 
+    chars = chars.map(function(row) {
+      return row.map(function(c) { return _.find(this.props.data, {img: c}); }.bind(this));
     }.bind(this));
 
     function makeChar(c) {
       var players = [];
-      selectedChars.forEach(function(s, i) {
-        if (c == s) {
+      this.props.selected.forEach(function(s, i) {
+        if (c.id == s) {
           players.push(i+1);
         }
       });
-      return (<Character name={c} players={players} addCharacter={this.props.addCharacter}/>);
+      return (<Character key={c.id} data={c} players={players} addCharacter={this.props.addCharacter}/>);
     }
-    boundMakeChar = makeChar.bind(this);
+    makeChar = makeChar.bind(this);
     function makeCharRow(row, i) {
       var styles = {
         'padding-left' : (i == 1 ? 4 :
                           i == 2 ? 67 : 0)
       };
       return (
-        <div className="characterRow" style={styles}>
-          {row.map(boundMakeChar)}
+        <div key={i} className="characterRow" style={styles}>
+          {row.map(makeChar)}
         </div>
       );
     }
@@ -165,42 +185,53 @@ var Player = React.createClass({
 
 var Players = React.createClass({
   render: function() {
-    if (this.props.data.length) debugger;
     return (
-      <div>{ this.props.data.map(function(p) {return (<Player data={p} addPlayer={this.props.addPlayer} />);}.bind(this)) }</div>
+      <div>{ this.props.data.map(function(p) {return (<Player key={p.id} data={p} addPlayer={this.props.addPlayer} />);}.bind(this)) }</div>
     );
   }
 })
 
 var Summary = React.createClass({
+  handleClick: function() {
+    if (this.props.player) {
+      this.props.selectWinner(this.props.player.id);
+    }
+  },
   render: function() {
-    var character = this.props.char ? <Character name={this.props.char} players={[]} classes="playerChar" /> : null
+    var character = this.props.char ? <Character data={this.props.char} players={[]} summary={true} /> : null
+    var classes = "summary " + (this.props.selected ? 'selected' : ''); 
     return (
-      <div className="playerBox box">
-        <img src={'img/players/'+this.props.id+'-display.png'} className="player" />
+      <div className="summaryBox box" onClick={this.handleClick} >
+        <img src={'img/players/p'+this.props.id+'-display.png'} className={classes} />
         {character}
-        <span className="playerText">{this.props.name}</span>
+        <span className="summaryText">{this.props.player ? this.props.player.name : ''}</span>
+        {this.props.selected ? <span className="summaryWinner">Winner!!!</span> : ''}
       </div>
     );
   }
 })
 var Summaries = React.createClass({
   render: function() {
-    var players = ['p1', 'p2', 'p3', 'p4'];
-    var selectedPlayers = this.props.selected.map(function(s) {
-      return _.find(this.props.data, {id: s}).name; 
+    if (!this.props.playerData.length || !this.props.characterData.length) {
+      return (<div />);
+    }
+    var ids = [1, 2, 3, 4];
+    var selectedPlayers = this.props.selectedPlayers.map(function(s) {
+      return _.find(this.props.playerData, {id: s}); 
     }.bind(this));
     var selectedChars = this.props.selectedChars.map(function(s) {
-      return _.find(this.props.characterData, {id: s}).img; 
+      return _.find(this.props.characterData, {id: s}); 
     }.bind(this));
-    players = _.zip(players, selectedPlayers, selectedChars);
+    var summaries = _.zip(ids, selectedPlayers, selectedChars);
 
     function makeSummary(p) {
-      return (<Summary id={p[0]} name={p[1]} char={p[2]} />);
+      var selected = p[1] && p[1].id == this.props.winner;
+      return (<Summary key={p[0]} id={p[0]} player={p[1]} char={p[2]} selected={selected} selectWinner={this.props.selectWinner} />);
     }
+    makeSummary = makeSummary.bind(this);
     return (
-      <div className="players">
-        { players.map(makeSummary) }
+      <div className="summaries">
+        { summaries.map(makeSummary.bind(this)) }
       </div>
     );
   }
@@ -217,17 +248,20 @@ var Select = React.createClass({
 
 var Stage = React.createClass({
   handleClick: function() {
-    this.props.selectStage(this.props.name);
+    this.props.selectStage(this.props.data.id);
   },
   render: function() {
     var classes = "stage " + (this.props.selected ? 'selected' : '');
     return (
-      <img src={'img/stages/'+this.props.name+'.jpg'} className={classes} onClick={this.handleClick} />
+      <img src={'img/stages/'+this.props.data.img+'.jpg'} className={classes} onClick={this.handleClick} />
     );
   }
 });
 var Stages = React.createClass({
   render: function() {
+    if (!this.props.data.length) {
+      return (<div />);
+    }
     var stages = [
       ['icicle-mountain', 'princess-peachs-castle', 'kongo-jungle', 'great-bay', 'yoshis-story', 'fountain-of-dreams', 'corneria'],
       ['rainbow-cruise', 'jungle-japes', 'temple', 'yoshis-island', 'green-greens', 'venom', 'flat-zone'],
@@ -235,19 +269,20 @@ var Stages = React.createClass({
       ['brinstar-depths', 'fourside', 'big-blue', 'poke-floats', 'kingdom-ii'],
       ['battlefield', 'final-destination', 'past-dream-land', 'past-yoshis-island', 'past-kongo-jungle']
     ]
-    var selectedStage =  this.props.selected ? _.find(this.props.data, {id: this.props.selected}).img : null;
-
+    stages = stages.map(function(row) {
+      return row.map(function(s) { return _.find(this.props.data, {img: s}); }.bind(this));
+    }.bind(this));
     function makeStage(s) {
-      return (<Stage name={s} selected={selectedStage == s} selectStage={this.props.selectStage} />);
+      return (<Stage key={s.id} data={s} selected={this.props.selected == s.id} selectStage={this.props.selectStage} />);
     }
-    boundMakeStage = makeStage.bind(this);
+    makeStage = makeStage.bind(this);
     function makeStageRow(row, i) {
       var styles = {
         'padding-left': (i >= 2 ? 125 : 0)
       };
       return (
-        <div className="characterRow" style={styles}>
-          {row.map(boundMakeStage)}
+        <div key={i} className="characterRow" style={styles}>
+          {row.map(makeStage)}
         </div>
       );
     }
@@ -259,12 +294,21 @@ var Stages = React.createClass({
   }
 });
 
-function getData(url) {
-  return function(callback) {
-    $.getJSON(url, {}, function(data) {
-      callback(null, data);
-    });
+var Buttons = React.createClass({
+  reset: function() {
+    this.props.reset();
+  },
+  back: function() {
+    this.props.back();
+  },
+  render: function() {
+    return (
+      <div>
+        <button onClick={this.reset}>Reset</button>
+        <button onClick={this.back}>Back</button>
+      </div>
+    );
   }
-}
+});
 
 React.renderComponent(<App />, document.getElementById('app'));
