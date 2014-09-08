@@ -88,17 +88,46 @@ var App = React.createClass({
       winner: w 
     });
   },
+  addFight: function() {
+    $.post('/api/fights', {
+      p1: this.state.players[0],
+      p2: this.state.players[1],
+      p3: this.state.players[2],
+      p4: this.state.players[3],
+      c1: this.state.characters[0],
+      c2: this.state.characters[1],
+      c3: this.state.characters[2],
+      c4: this.state.characters[3],
+      stage: this.state.stage,
+      winner: this.state.winner,
+    });
+    this.setState({
+      players: [],
+      characters: [],
+      stage: 0,
+      winner: 0
+    });
+  },
+  clearFight: function() {
+    this.setState({
+      players: [],
+      characters: [],
+      stage: 0,
+      winner: 0
+    });
+  },
   render: function() {
     return (
       <div className="app">
-        <Buttons reset={this.resetCharacters} back={this.removeCharacter} />
         <Characters data={this.state.characterData} selected={this.state.characters} addCharacter={this.addCharacter} />
-        <Buttons reset={this.resetPlayers} back={this.removePlayer} />
+        <Buttons reset={this.resetCharacters} back={this.removeCharacter} />
         <Players data={this.state.playerData} addPlayer={this.addPlayer} />
+        <Buttons reset={this.resetPlayers} back={this.removePlayer} />
         <Summaries playerData={this.state.playerData} selectedPlayers={this.state.players} 
                    characterData={this.state.characterData} selectedChars={this.state.characters} 
                    winner={this.state.winner} selectWinner={this.selectWinner} />
         <Stages data={this.state.stageData} selected={this.state.stage} selectStage={this.selectStage} />
+        <Submit addFight={this.addFight} clearFight={this.clearFight} />
       </div>
     );
   }
@@ -306,6 +335,23 @@ var Buttons = React.createClass({
       <div>
         <button onClick={this.reset}>Reset</button>
         <button onClick={this.back}>Back</button>
+      </div>
+    );
+  }
+});
+
+var Submit = React.createClass({
+  addFight: function() {
+    this.props.addFight();
+  },
+  clearFight: function() {
+    this.props.clearFight();
+  },
+  render: function() {
+    return (
+      <div>
+        <button onClick={this.addFight}>Add</button>
+        <button onClick={this.clearFight}>Clear</button>
       </div>
     );
   }
