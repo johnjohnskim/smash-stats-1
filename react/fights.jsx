@@ -118,7 +118,7 @@ var App = React.createClass({
   },
   render: function() {
     return (
-      <div className="app">
+      <div className="app container text-center">
         <Characters data={this.state.characterData} selected={this.state.characters} addCharacter={this.addCharacter} />
         <Buttons reset={this.resetCharacters} back={this.removeCharacter} />
         <Players data={this.state.playerData} addPlayer={this.addPlayer} />
@@ -184,8 +184,7 @@ var Characters = React.createClass({
     makeChar = makeChar.bind(this);
     function makeCharRow(row, i) {
       var styles = {
-        'padding-left' : (i == 1 ? 4 :
-                          i == 2 ? 67 : 0)
+        'padding-left' : (i > 0 ? 4 : 0)
       };
       return (
         <div key={i} className="characterRow" style={styles}>
@@ -292,8 +291,9 @@ var Stages = React.createClass({
       return (<div />);
     }
     var stages = [
-      ['icicle-mountain', 'princess-peachs-castle', 'kongo-jungle', 'great-bay', 'yoshis-story', 'fountain-of-dreams', 'corneria'],
-      ['rainbow-cruise', 'jungle-japes', 'temple', 'yoshis-island', 'green-greens', 'venom', 'flat-zone'],
+      ['princess-peachs-castle', 'kongo-jungle', 'great-bay', 'yoshis-story', 'fountain-of-dreams', 'corneria'],
+      ['rainbow-cruise', 'jungle-japes', 'temple', 'yoshis-island', 'green-greens', 'venom'],
+      ['icicle-mountain', 'flat-zone'],
       ['brinstar', 'onett', 'mute-city', 'pokemon-stadium', 'kingdom'],
       ['brinstar-depths', 'fourside', 'big-blue', 'poke-floats', 'kingdom-ii'],
       ['battlefield', 'final-destination', 'past-dream-land', 'past-yoshis-island', 'past-kongo-jungle']
@@ -306,11 +306,8 @@ var Stages = React.createClass({
     }
     makeStage = makeStage.bind(this);
     function makeStageRow(row, i) {
-      var styles = {
-        'padding-left': (i >= 2 ? 125 : 0)
-      };
       return (
-        <div key={i} className="characterRow" style={styles}>
+        <div key={i} className="characterRow">
           {row.map(makeStage)}
         </div>
       );
