@@ -1,6 +1,6 @@
 bower_components/
 node_modules/
-buid/
+build/
 test/
 test.js
 auth.js
