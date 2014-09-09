@@ -3,4 +3,19 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}!!
-  a(href='/leaderboards') Leaderboards
+  div
+    a(href='/fights') Add a fight
+  div
+    a(href='/tables/leaderboards/players') Player Leaderboards
+  div
+    a(href='/tables/leaderboards/characters') Character Leaderboards
+  div
+    a(href='/tables/bestat/characters') Best At Characters
+  div
+    a(href='/tables/bestat/stages') Best At Stages
+  div
+    a(href='/tables/matchups/players') Player vs Player
+  div
+    a(href='/tables/matchups/characters') Character vs Character
+
+

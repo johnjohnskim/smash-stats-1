@@ -28,8 +28,8 @@ function addEndpoint(path, api, template, extra) {
 addEndpoint('/leaderboards/players', 'playermeta', 'leaderboards', {title: 'Leaderboards'});
 addEndpoint('/leaderboards/characters', 'charactermeta', 'leaderboards', {title: 'Character Leaderboards'});
 
-addEndpoint('/bestas/characters', 'characterwins', 'bestas', {title: 'Best Characters', type: 'Character'});
-addEndpoint('/bestas/stages', 'stagewins', 'bestas', {title: 'Best Stages', type: 'Stage'});
+addEndpoint('/bestat/characters', 'characterwins', 'bestat', {title: 'Best Characters', type: 'Character'});
+addEndpoint('/bestat/stages', 'stagewins', 'bestat', {title: 'Best Stages', type: 'Stage'});
 
 addEndpoint('/matchups/players', 'playervs', 'matchups', {title: 'Player vs Player', type: 'Player'});
 addEndpoint('/matchups/characters', 'charactervs', 'matchups', {title: 'Character vs Character', type: 'Character'});

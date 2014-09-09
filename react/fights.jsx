@@ -108,6 +108,14 @@ var App = React.createClass({
       winner: 0
     });
   },
+  addNewPlayer: function(name) {
+    $.post('/api/players', {name: name}, function(id) {
+      id.name = name;
+      this.setState({
+        playerData: this.state.playerData.concat([id])
+      });
+    }.bind(this));
+  },
   clearFight: function() {
     this.setState({
       players: [],
@@ -127,6 +135,7 @@ var App = React.createClass({
                    characterData={this.state.characterData} selectedChars={this.state.characters} 
                    winner={this.state.winner} selectWinner={this.selectWinner} />
         <Stages data={this.state.stageData} selected={this.state.stage} selectStage={this.selectStage} />
+        <AddPlayer addPlayer={this.addNewPlayer} />
         <Submit addFight={this.addFight} clearFight={this.clearFight} />
       </div>
     );
@@ -337,6 +346,23 @@ var Buttons = React.createClass({
   }
 });
 
+var AddPlayer = React.createClass({
+  handleClick: function() {
+    var name = this.refs.name.getDOMNode().value.trim();
+    if (!name) return;
+    this.props.addPlayer(name);
+    this.refs.name.getDOMNode().value = '';
+  },
+  render: function() {
+    return (
+      <div className="addPlayer">
+        <input type="text" placeholder="New player..." ref="name" />
+        <button onClick={this.handleClick}>Add</button>
+      </div>
+    );
+  }
+});
+
 var Submit = React.createClass({
   addFight: function() {
     this.props.addFight();
@@ -346,7 +372,7 @@ var Submit = React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <div className="addFight">
         <button onClick={this.addFight}>Add</button>
         <button onClick={this.clearFight}>Clear</button>
       </div>
