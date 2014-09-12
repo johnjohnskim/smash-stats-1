@@ -3,7 +3,6 @@
  */
 
 var queue = require('queue-async');
-var $ = require('jquery');
 
 function getData(url) {
   return function(callback) {
