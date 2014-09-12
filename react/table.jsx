@@ -16,7 +16,8 @@ var Table = React.createClass({
     return {
       data: [],
       sortBy: -1,
-      order: '+'
+      order: '+',
+      filter: ''
     };
   },
   componentDidMount: function() {
@@ -36,6 +37,11 @@ var Table = React.createClass({
       });
     }.bind(this));
   },
+  handleKeypress: _.throttle(function() {
+    this.setState({
+      filter: this.refs.search.getDOMNode().value 
+    });
+  }, 100),
   sort: function(index) {
     if (this.state.sortBy == index) {
       this.setState({
@@ -51,7 +57,19 @@ var Table = React.createClass({
   render: function() {
     if (!this.state.data.length) return (<div />);
     var data = this.state.data;
+    var filter = this.state.filter.toLowerCase();
     var first;
+
+    // filter data
+    if (this.state.filter) {
+      data = data.filter(function(d) {
+        return d.some(function(x) {
+          return isNum(x) ? false : x.toLowerCase().indexOf(filter) > -1;
+        });
+      });
+    }
+
+    // sort data
     if (this.state.sortBy > -1) {
       first = data[0][this.state.sortBy];
       if (isNum(first)) {
@@ -77,16 +95,19 @@ var Table = React.createClass({
     }.bind(this));
 
     return (
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            { this.props.headers.map(function(h, i) {return (<Header key={i} name={h[1]} sort={this.sort} />);}.bind(this)) }
-          </tr>
-        </thead>
-        <tbody>
-          {trs}
-        </tbody>
-      </table>
+      <div>
+        <input type="text" placeholder="Search..." ref="search" onChange={this.handleKeypress} />
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              { this.props.headers.map(function(h, i) {return (<Header key={i} name={h[1]} sort={this.sort} />);}.bind(this)) }
+            </tr>
+          </thead>
+          <tbody>
+            {trs}
+          </tbody>
+        </table>
+      </div>
     );
   }
 });
