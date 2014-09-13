@@ -7,10 +7,13 @@ var react = require('gulp-react');
 var browserify = require('gulp-browserify');
 var nodemon = require('gulp-nodemon');
 var livereload = require('gulp-livereload');
+var minifyCss = require('gulp-minify-css');
+var uglify = require('gulp-uglify');
 
 gulp.task('less', function() {
   gulp.src('./less/app.less')
     .pipe(less())
+    .pipe(minifyCss())
     .pipe(gulp.dest('./build/css'))
 });
 
@@ -26,6 +29,7 @@ gulp.task('reactify', function() {
       transform: ['reactify'],
       extensions: ['.jsx'],
     }))
+    .pipe(uglify())
     .pipe(rename(function(path) {
       path.basename += '-bundle';
       path.extname = '.js';

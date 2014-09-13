@@ -2,8 +2,6 @@
  * @jsx React.DOM
  */
 
-var queue = require('queue-async');
-
 function isNum(x) {
   return !isNaN(x);
 }
