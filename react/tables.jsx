@@ -123,10 +123,64 @@ var Header = React.createClass({
   }
 });
 
-var headers = [
-  ['name', 'Name'],
-  ['total', 'Total Fights'],
-  ['wins', 'Wins'],
-  ['winpct', 'Win %']
-];
-React.renderComponent(<Table url='/api/playermeta' headers={headers} />, document.getElementById('app'));
+
+
+var tableType = $('#app')[0].getAttribute('type');
+var tableMeta = {
+  'playermeta': {
+    'headers': [ 
+      ['name', 'Name'],
+      ['total', 'Total Fights'],
+      ['wins', 'Wins'],
+      ['winpct', 'Win %']
+    ]
+  },
+  'charactermeta': {
+    'headers': [ 
+      ['name', 'Name'],
+      ['total', 'Total Fights'],
+      ['wins', 'Wins'],
+      ['winpct', 'Win %']
+    ]
+  },
+  'characterwins': {
+    'headers': [
+      ['playername', 'Player'],
+      ['charactername', 'Character'],
+      ['total', 'Total'],
+      ['wins', 'Wins'],
+      ['winpct', 'Win %'],
+    ]
+  },
+  'stagewins': {
+    'headers': [
+      ['playername', 'Player'],
+      ['stagename', 'Stage'],
+      ['total', 'Total'],
+      ['wins', 'Wins'],
+      ['winpct', 'Win %'],
+    ]
+  },
+  'playervs': {
+    'headers': [
+      ['pname1', 'Player 1'],
+      ['pname2', 'Player 2'],
+      ['total', 'Total'],
+      ['wins', 'Wins'],
+      ['winpct', 'Win %'],
+    ]
+  },
+  'charactervs': {
+    'headers': [
+      ['cname1', 'Character 1'],
+      ['cname2', 'Character 2'],
+      ['total', 'Total'],
+      ['wins', 'Wins'],
+      ['winpct', 'Win %'],
+    ]
+  },
+}
+
+if (tableMeta[tableType]) {
+  React.renderComponent(<Table url={'/api/'+tableType} headers={tableMeta[tableType].headers} />, document.getElementById('app'));
+}
