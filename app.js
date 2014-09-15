@@ -19,6 +19,8 @@ app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
+
+// static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
@@ -29,7 +31,6 @@ app.use('/tables', tables);
 app.use('/fights', fights);
 app.use('/', index);
 
-// error handlers
 // 404
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -50,7 +51,6 @@ app.use(function(err, req, res, next) {
 });
 
 // module.exports = app;
-
 app.set('port', process.env.PORT || 8080);
 var server = app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + server.address().port);

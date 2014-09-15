@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var sql = require('../db/sql');
-
 var router = express.Router();
 
 router.use(function(req, res, next) {
@@ -94,7 +93,7 @@ router.route('/fights/:fid')
 // REST
 var views = ['stages', 'stagewins', 
   'characters', 'characterwins', 'charactermeta', 'charactervs',
-  'playermeta', 'playervs'];
+  'playermeta', 'playervs', 'playertimeline', 'charactertimeline'];
 
 views.forEach(function(v) {
   router.route('/' + v)
