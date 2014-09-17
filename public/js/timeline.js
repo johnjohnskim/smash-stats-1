@@ -92,7 +92,7 @@ function update() {
     d3.max(data, function(p) { return d3.max(p.values, function(d) { return d.stat; }); })
   ]); 
 
-  var player = svg.selectAll('.player')
+  var player = svg.selectAll('.playerLine')
       .data(data)
       
   // enter
