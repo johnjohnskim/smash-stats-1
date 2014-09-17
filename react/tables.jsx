@@ -80,7 +80,7 @@ var Table = React.createClass({
         }.bind(this));
       } else {
         data = _.sortBy(data, function(d) { return d; }.bind(this));
-        data = this.state.order == '+' ? data.reverse() : data;
+        data = this.state.order == '-' ? data.reverse() : data;
       }
     }
 
@@ -94,8 +94,11 @@ var Table = React.createClass({
 
     return (
       <div>
-        <input type="text" placeholder="Search..." ref="search" onChange={this.handleKeypress} />
-        <table className="table table-hover">
+        <div className="pull-right">
+          <input type="text" className="form-control" placeholder="Search..." ref="search" onChange={this.handleKeypress} />
+        </div>
+        <div className="clearfix"></div>
+        <table className="table table-hover mainTable">
           <thead>
             <tr>
               { this.props.headers.map(function(h, i) {return (<Header key={i} name={h[1]} sort={this.sort} />);}.bind(this)) }
@@ -122,8 +125,6 @@ var Header = React.createClass({
 });
 
 
-
-var tableType = $('#app')[0].getAttribute('type');
 var tableMeta = {
   'playermeta': {
     'headers': [ 
@@ -179,6 +180,7 @@ var tableMeta = {
   },
 }
 
-if (tableMeta[tableType]) {
+var tableType = $('#app')[0].getAttribute('type');
+if (tableType && tableMeta[tableType]) {
   React.renderComponent(<Table url={'/api/'+tableType} headers={tableMeta[tableType].headers} />, document.getElementById('app'));
 }

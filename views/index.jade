@@ -1,21 +1,12 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}!!
-  div
-    a(href='/fights') Add a fight
-  div
-    a(href='/tables/playermeta') Player Leaderboards
-  div
-    a(href='/tables/charactermeta') Character Leaderboards
-  div
-    a(href='/tables/characterwins') Best At Characters
-  div
-    a(href='/tables/stagewins') Best At Stages
-  div
-    a(href='/tables/playervs') Player vs Player
-  div
-    a(href='/tables/charactervs') Character vs Character
-
+  div.container
+    h1= title 
+      small &nbsp;&nbsp;better than Luke's app
+    div
+      a(href='/fights') Add a fight
+    each p in tablePages
+      div
+        a(href='/tables/'+p[0])= p[1]
 
