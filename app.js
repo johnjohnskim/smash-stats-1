@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 
 var api = require('./routes/api');
 var tables = require('./routes/tables');
+var graphs = require('./routes/graphs');
 var fights = require('./routes/fights');
 var index = require('./routes/index');
 
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'bower_components')));
 // routes
 app.use('/api', api);
 app.use('/tables', tables);
+app.use('/graphs', graphs);
 app.use('/fights', fights);
 app.use('/', index);
 
