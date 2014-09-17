@@ -98,7 +98,8 @@ var views = ['stages', 'stagewins',
 views.forEach(function(v) {
   router.route('/' + v)
     .get(function(req, res) {
-      sql.getRows("SELECT * FROM " + v, null, res, function(err, rows) {
+      extra = v == 'playertimeline' ? " ORDER BY player, date" : '';
+      sql.getRows("SELECT * FROM " + v + extra, null, res, function(err, rows) {
         res.json(rows);
       });
     })
