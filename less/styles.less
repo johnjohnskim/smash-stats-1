@@ -8,13 +8,51 @@ body {
 .table-hover > tbody > tr:hover > th {
   background-color: #D2F2FF;
 }
+.btn {
+  border-radius: 1px;
+}
+.btn-primary {
+  background-color: #41569B;
+  border-color: #5B678F;
+  &:hover {
+    background-color: #334375;
+  }
+}
+.btn-success {
+  background-color: #3AA264;
+  border-color: #688D77;
+  &:hover {
+    background-color: #398A59;
+  }
+}
+.btn-danger {
+  background-color: #DA4F4A;
+  border-color: #BD5E5B;
+  &:hover {
+    background-color: #BB514D;
+  }
+}
 
 // general styles
+
+hr {
+  border-top: 1px solid #C2C2C2;
+}
 
 // fights
 .box {
   display: inline;
   position: relative;
+}
+.player {
+  background-color: #fff;
+  border-color: #5B678F;
+  color: #000;
+  margin: 5px;
+  &:hover {
+    background-color: #DDE5FF;
+  }
+
 }
 .character, .stage {
   opacity: 0.75;
@@ -66,6 +104,9 @@ body {
   }
 }
 
+.summaries {
+  margin-top: 20px;
+}
 .summary {
   height: 230px;
   &.selected {
@@ -100,16 +141,32 @@ body {
   top: -50px;
 }
 
-.addPlayer, .addFight {
-  position: fixed;
-  right: 0;
-}
 .addPlayer {
-  top: 0;
+  text-align: left;
+  margin-bottom: 15px;
 }
+.playerInput {
+  display: inline-block;
+  width: 17%;
+  margin-right: 2px;
+}
+
 .addFight {
-  top: 35px;
+  margin-top: 25px;
+  margin-bottom: 15px;
 }
+.addButton {
+  margin-right: 50px;
+}
+.addButton, .clearButton {
+  width: 100px;
+}
+
+.back, .reset {
+  margin-top: 8px;
+  margin-left: 3px;
+}
+
 
 // tables
 .mainTable {

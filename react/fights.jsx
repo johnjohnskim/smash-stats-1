@@ -125,16 +125,18 @@ var App = React.createClass({
   },
   render: function() {
     return (
-      <div className="app container text-center">
+      <div className="app text-center">
         <Characters data={this.state.characterData} selected={this.state.characters} addCharacter={this.addCharacter} />
         <Buttons reset={this.resetCharacters} back={this.removeCharacter} />
+        <hr />
+        <AddPlayer addPlayer={this.addNewPlayer} />
         <Players data={this.state.playerData} addPlayer={this.addPlayer} />
         <Buttons reset={this.resetPlayers} back={this.removePlayer} />
         <Summaries playerData={this.state.playerData} selectedPlayers={this.state.players} 
                    characterData={this.state.characterData} selectedChars={this.state.characters} 
                    winner={this.state.winner} selectWinner={this.selectWinner} />
+        <hr />
         <Stages data={this.state.stageData} selected={this.state.stage} selectStage={this.selectStage} />
-        <AddPlayer addPlayer={this.addNewPlayer} />
         <Submit addFight={this.addFight} clearFight={this.clearFight} />
       </div>
     );
@@ -214,7 +216,7 @@ var Player = React.createClass({
   },
   render: function() {
     return (
-      <button onClick={this.handleClick}>{this.props.data.name}</button>
+      <button className="player btn" onClick={this.handleClick}>{this.props.data.name}</button>
     );
   }
 });
@@ -337,9 +339,11 @@ var Buttons = React.createClass({
   },
   render: function() {
     return (
-      <div>
-        <button onClick={this.reset}>Reset</button>
-        <button onClick={this.back}>Back</button>
+      <div className="clearfix">
+        <div className="pull-right">
+          <button className="btn btn-default back" onClick={this.back}>Back</button>
+          <button className="btn btn-default reset" onClick={this.reset}>Reset</button>
+        </div>
       </div>
     );
   }
@@ -355,8 +359,8 @@ var AddPlayer = React.createClass({
   render: function() {
     return (
       <div className="addPlayer">
-        <input type="text" placeholder="New player..." ref="name" />
-        <button onClick={this.handleClick}>Add</button>
+        <input type="text" className="form-control playerInput" placeholder="New player..." ref="name" />
+        <button className="btn btn-success" onClick={this.handleClick}>Add</button>
       </div>
     );
   }
@@ -372,8 +376,8 @@ var Submit = React.createClass({
   render: function() {
     return (
       <div className="addFight">
-        <button onClick={this.addFight}>Add</button>
-        <button onClick={this.clearFight}>Clear</button>
+        <button className="btn btn-success addButton" onClick={this.addFight}>Add</button>
+        <button className="btn btn-danger clearButton" onClick={this.clearFight}>Clear</button>
       </div>
     );
   }

@@ -97,7 +97,7 @@ function update() {
       
   // enter
   var enter = player.enter().append('g')
-      .attr('class', 'player');
+      .attr('class', 'playerLine');
   enter.append('path')
     .attr('class', 'line')
     .attr("d", function(d) { return line(d.values); })

@@ -94,10 +94,11 @@ var Table = React.createClass({
 
     return (
       <div>
-        <div className="pull-right">
-          <input type="text" className="form-control" placeholder="Search..." ref="search" onChange={this.handleKeypress} />
+        <div className="clearfix">
+          <div className="pull-right">
+            <input type="text" className="form-control" placeholder="Search..." ref="search" onChange={this.handleKeypress} />
+          </div>
         </div>
-        <div className="clearfix"></div>
         <table className="table table-hover mainTable">
           <thead>
             <tr>
