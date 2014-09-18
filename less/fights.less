@@ -115,9 +115,22 @@
 }
 .addButton {
   margin-right: 50px;
+  &.added {
+    background-color: #41569B;
+    border-color: #5B678F;
+    &:hover {
+      background-color: #334375;
+    }
+  }
 }
 .addButton, .clearButton {
   width: 100px;
+}
+.errorMsg {
+  // margin-top: 15px;
+  color: #DF5959;
+  display: inline-block;
+  margin-left: 5%;
 }
 
 .back, .reset {

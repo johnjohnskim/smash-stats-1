@@ -34,11 +34,13 @@ var App = React.createClass({
       players: [],
       characters: [],
       stage: 0,
-      winner: 0
+      winner: 0,
+      errorMsg: '',
+      isFightAdded: false
     };
   },
   addPlayer: function(p) {
-    if (this.state.players.length < 4) {
+    if (this.state.players.length < 4 && this.state.players.indexOf(p) == -1) {
       this.setState({
         players: this.state.players.concat([p])
       });
@@ -88,6 +90,20 @@ var App = React.createClass({
     });
   },
   addFight: function() {
+    var msg = !this.state.characters[0] ? 'a character is required':
+              !this.state.players[0] ? 'a player is required' : 
+              !this.state.winner ? 'a winner is required' : 
+              !this.state.stage ? 'a stage is required' :
+              this.state.players.length > this.state.characters.length ? 'a character is required for every player' :
+              this.state.players.length < this.state.characters.length ? 'a player is required for every character' :
+              _.uniq(this.state.players).length != this.state.players.length ? 'cannot have duplicate players' :
+              '';
+    if (msg) {
+      this.setState({
+        errorMsg: msg
+      });
+      return;
+    }
     $.post('/api/fights', {
       p1: this.state.players[0],
       p2: this.state.players[1],
@@ -104,8 +120,15 @@ var App = React.createClass({
       players: [],
       characters: [],
       stage: 0,
-      winner: 0
+      winner: 0,
+      errorMsg: '',
+      isFightAdded: true
     });
+    setTimeout(function() {
+      this.setState({
+        isFightAdded: false 
+      });
+    }.bind(this), 3000);
   },
   addNewPlayer: function(name) {
     $.post('/api/players', {name: name}, function(id) {
@@ -120,7 +143,8 @@ var App = React.createClass({
       players: [],
       characters: [],
       stage: 0,
-      winner: 0
+      winner: 0,
+      errorMsg: ''
     });
   },
   render: function() {
@@ -137,7 +161,7 @@ var App = React.createClass({
                    winner={this.state.winner} selectWinner={this.selectWinner} />
         <hr />
         <Stages data={this.state.stageData} selected={this.state.stage} selectStage={this.selectStage} />
-        <Submit addFight={this.addFight} clearFight={this.clearFight} />
+        <AddFight addFight={this.addFight} clearFight={this.clearFight} errorMsg={this.state.errorMsg} isFightAdded={this.state.isFightAdded} />
       </div>
     );
   }
@@ -360,13 +384,13 @@ var AddPlayer = React.createClass({
     return (
       <div className="addPlayer">
         <input type="text" className="form-control playerInput" placeholder="New player..." ref="name" />
-        <button className="btn btn-success" onClick={this.handleClick}>Add</button>
+        <button className="btn btn-primary" onClick={this.handleClick}>Add</button>
       </div>
     );
   }
 });
 
-var Submit = React.createClass({
+var AddFight = React.createClass({
   addFight: function() {
     this.props.addFight();
   },
@@ -374,10 +398,18 @@ var Submit = React.createClass({
     this.props.clearFight();
   },
   render: function() {
+    var cx = React.addons.classSet;
+    var classes = cx({
+      'btn' : true,
+      'addButton': true,
+      'btn-primary': !this.props.isFightAdded,
+      'btn-success': this.props.isFightAdded
+    });
     return (
       <div className="addFight">
-        <button className="btn btn-success addButton" onClick={this.addFight}>Add</button>
+        <button className={classes} onClick={this.addFight}>{(this.props.isFightAdded ? 'Added!!' : 'Add')}</button>
         <button className="btn btn-danger clearButton" onClick={this.clearFight}>Clear</button>
+        <div className="errorMsg"><strong>{this.props.errorMsg}</strong></div>
       </div>
     );
   }
