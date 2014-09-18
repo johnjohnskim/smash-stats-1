@@ -21,7 +21,7 @@ router.route('/players')
     if (!name) {
       return res.end('Need a name');
     }
-    sql.insert("INSERT INTO players (name) VALUES ($1)", [req.body.name], res, function(err, id) {
+    sql.insert("INSERT INTO u_players (name) VALUES ($1)", [req.body.name], res, function(err, id) {
       res.json(id);
     });
   })
@@ -37,7 +37,7 @@ router.route('/players/:pid')
     if (!name) {
       return res.end('Need a name');
     }
-    sql.query("UPDATE players SET name=$1 WHERE id=$2", [req.body.name, req.params.pid], res, function(err) {
+    sql.query("UPDATE u_players SET name=$1 WHERE id=$2", [req.body.name, req.params.pid], res, function(err) {
       res.end('ok');
     });
   })
