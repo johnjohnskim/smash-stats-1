@@ -1,0 +1,126 @@
+.box {
+  display: inline;
+  position: relative;
+}
+.player {
+  background-color: #fff;
+  border-color: #5B678F;
+  color: #000;
+  margin: 5px;
+  &:hover {
+    background-color: #DDE5FF;
+  }
+
+}
+.character, .stage {
+  opacity: 0.75;
+  &:hover {
+    opacity: 1 !important;
+  }
+}
+.character {
+  &.selected {
+    outline: 3px solid @orange;
+    opacity: 0.9;
+    z-index: 2;
+  }
+}
+.stage {
+  height: 110px;
+  width: 110px;
+  position: relative;
+  &.selected {
+    outline: 4px solid @red;
+    opacity: 1;
+    z-index: 2;
+  }
+}
+
+@left: 4px;
+@top: -19px;
+@right: 38px;
+@bottom: 10px;
+.select {
+  height: 25px;
+  position: absolute;
+  z-index: 1;
+  &.p1 {
+    top: @top;
+    left: @left;
+  }
+  &.p2 {
+    top: @top;
+    left: @right;
+  }    
+  &.p3 {
+    top: @bottom;
+    left: @left;
+  }    
+  &.p4 {
+    top: @bottom;
+    left: @right;
+  }
+}
+
+.summaries {
+  margin-top: 20px;
+}
+.summary {
+  height: 230px;
+  &.selected {
+    outline: 4px solid @red;
+    z-index: 3;
+  }
+}
+.summaryText {
+  position: absolute;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  color: @white;
+  width: 109px;
+  left: 29px;
+  top: 59px;
+}
+.summaryWinner {
+  position: absolute;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  color: @white;
+  width: 114px;
+  left: 26px;
+  top: 85px;
+}
+.summaryChar {
+  position: absolute;
+  opacity: 1;
+  z-index: 1;
+  height: 81px;
+  left: -125px;
+  top: -50px;
+}
+
+.addPlayer {
+  text-align: left;
+  margin-bottom: 15px;
+}
+.playerInput {
+  display: inline-block;
+  width: 17%;
+  margin-right: 2px;
+}
+
+.addFight {
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+.addButton {
+  margin-right: 50px;
+}
+.addButton, .clearButton {
+  width: 100px;
+}
+
+.back, .reset {
+  margin-top: 8px;
+  margin-left: 3px;
+}

@@ -68,7 +68,7 @@ var Table = React.createClass({
     }
 
     // sort data
-    if (this.state.sortBy > -1) {
+    if (this.state.sortBy > -1 && data.length) {
       first = data[0][this.state.sortBy];
       if (isNum(first)) {
         data = _.sortBy(data, function(d) {
@@ -79,7 +79,7 @@ var Table = React.createClass({
           return (this.state.order == '-' ? 1 : -1) * parseInt(d[this.state.sortBy], 10);
         }.bind(this));
       } else {
-        data = _.sortBy(data, function(d) { return d; }.bind(this));
+        data = _.sortBy(data, function(d) { return d[this.state.sortBy]; }.bind(this));
         data = this.state.order == '-' ? data.reverse() : data;
       }
     }

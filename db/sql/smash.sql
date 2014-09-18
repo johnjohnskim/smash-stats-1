@@ -2,8 +2,6 @@
 -- PostgreSQL database dump
 --
 
-SET statement_timeout = 0;
-SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -245,10 +243,10 @@ CREATE FUNCTION findfights(p character varying, c character varying) RETURNS SET
     LANGUAGE sql
     AS $$ 
 SELECT * FROM fights WHERE 
-(lower(p1name)=p AND lower(c1name)=c) OR
-(lower(p2name)=p AND lower(c2name)=c) OR
-(lower(p3name)=p AND lower(c3name)=c) OR
-(lower(p4name)=p AND lower(c4name)=c) 
+(lower(p1name)=$1 AND lower(c1name)=$2) OR
+(lower(p2name)=$1 AND lower(c2name)=$2) OR
+(lower(p3name)=$1 AND lower(c3name)=$2) OR
+(lower(p4name)=$1 AND lower(c4name)=$2) 
 $$;
 
 
@@ -262,10 +260,10 @@ CREATE FUNCTION findfights(p character varying, c integer) RETURNS SETOF fights
     LANGUAGE sql
     AS $$ 
 SELECT * FROM fights WHERE 
-(lower(p1name)=p AND character1=c) OR
-(lower(p2name)=p AND character2=c) OR
-(lower(p3name)=p AND character3=c) OR
-(lower(p4name)=p AND character4=c) 
+(lower(p1name)=$1 AND character1=$2) OR
+(lower(p2name)=$1 AND character2=$2) OR
+(lower(p3name)=$1 AND character3=$2) OR
+(lower(p4name)=$1 AND character4=$2) 
 $$;
 
 
@@ -279,10 +277,10 @@ CREATE FUNCTION findfights(p integer, c character varying) RETURNS SETOF fights
     LANGUAGE sql
     AS $$ 
 SELECT * FROM fights WHERE 
-(player1=p AND lower(c1name)=c) OR
-(player2=p AND lower(c2name)=c) OR
-(player3=p AND lower(c3name)=c) OR
-(player4=p AND lower(c4name)=c) 
+(player1=$1 AND lower(c1name)=$2) OR
+(player2=$1 AND lower(c2name)=$2) OR
+(player3=$1 AND lower(c3name)=$2) OR
+(player4=$1 AND lower(c4name)=$2) 
 $$;
 
 
@@ -296,10 +294,10 @@ CREATE FUNCTION findfights(p integer, c integer) RETURNS SETOF fights
     LANGUAGE sql
     AS $$ 
 SELECT * FROM fights WHERE 
-(player1=p AND character1=c) OR
-(player2=p AND character2=c) OR
-(player3=p AND character3=c) OR
-(player4=p AND character4=c) 
+(player1=$1 AND character1=$2) OR
+(player2=$1 AND character2=$2) OR
+(player3=$1 AND character3=$2) OR
+(player4=$1 AND character4=$2) 
 $$;
 
 
@@ -759,6 +757,7 @@ COPY u_players (id, name) FROM stdin;
 12	testplyaer
 13	anewguy
 14	a new player
+15	Testguy
 \.
 
 
@@ -766,7 +765,7 @@ COPY u_players (id, name) FROM stdin;
 -- Name: u_players_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('u_players_id_seq', 14, true);
+SELECT pg_catalog.setval('u_players_id_seq', 15, true);
 
 
 --

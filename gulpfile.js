@@ -55,6 +55,7 @@ gulp.task('watch', function() {
   // gulp.watch(['./react/*.jsx'], ['react']);
   gulp.watch(['./build/**'])
     .on('change', livereload.changed)
-})
+});
 
-gulp.task('default', ['watch', 'less', 'reactify', 'server']);
+gulp.task('dev', ['watch', 'less', 'reactify', 'server']);
+gulp.task('default', ['less', 'reactify']);
