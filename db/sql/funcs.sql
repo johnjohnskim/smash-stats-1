@@ -2,10 +2,10 @@ CREATE FUNCTION findfights(p integer, c integer)
   RETURNS SETOF fights AS
 $$ 
 SELECT * FROM fights WHERE 
-(player1=p AND character1=c) OR
-(player2=p AND character2=c) OR
-(player3=p AND character3=c) OR
-(player4=p AND character4=c) 
+(player1=$1 AND character1=$2) OR
+(player2=$1 AND character2=$2) OR
+(player3=$1 AND character3=$2) OR
+(player4=$1 AND character4=$2) 
 $$
   LANGUAGE sql;
 
@@ -13,10 +13,10 @@ CREATE FUNCTION findfights(p varchar, c varchar)
   RETURNS SETOF fights AS
 $$ 
 SELECT * FROM fights WHERE 
-(lower(p1name)=p AND lower(c1name)=c) OR
-(lower(p2name)=p AND lower(c2name)=c) OR
-(lower(p3name)=p AND lower(c3name)=c) OR
-(lower(p4name)=p AND lower(c4name)=c) 
+(lower(p1name)=$1 AND lower(c1name)=$2) OR
+(lower(p2name)=$1 AND lower(c2name)=$2) OR
+(lower(p3name)=$1 AND lower(c3name)=$2) OR
+(lower(p4name)=$1 AND lower(c4name)=$2) 
 $$
   LANGUAGE sql;
 
@@ -24,10 +24,10 @@ CREATE FUNCTION findfights(p integer, c varchar)
   RETURNS SETOF fights AS
 $$ 
 SELECT * FROM fights WHERE 
-(player1=p AND lower(c1name)=c) OR
-(player2=p AND lower(c2name)=c) OR
-(player3=p AND lower(c3name)=c) OR
-(player4=p AND lower(c4name)=c) 
+(player1=$1 AND lower(c1name)=$2) OR
+(player2=$1 AND lower(c2name)=$2) OR
+(player3=$1 AND lower(c3name)=$2) OR
+(player4=$1 AND lower(c4name)=$2) 
 $$
   LANGUAGE sql;
 
@@ -35,9 +35,9 @@ CREATE FUNCTION findfights(p varchar, c integer)
   RETURNS SETOF fights AS
 $$ 
 SELECT * FROM fights WHERE 
-(lower(p1name)=p AND character1=c) OR
-(lower(p2name)=p AND character2=c) OR
-(lower(p3name)=p AND character3=c) OR
-(lower(p4name)=p AND character4=c) 
+(lower(p1name)=$1 AND character1=$2) OR
+(lower(p2name)=$1 AND character2=$2) OR
+(lower(p3name)=$1 AND character3=$2) OR
+(lower(p4name)=$1 AND character4=$2) 
 $$
   LANGUAGE sql;
