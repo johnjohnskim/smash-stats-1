@@ -5,10 +5,11 @@ var rename = require('gulp-rename');
 var less = require('gulp-less');
 var react = require('gulp-react');
 var browserify = require('gulp-browserify');
-var nodemon = require('gulp-nodemon');
-var livereload = require('gulp-livereload');
 var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
+var livereload = app.get('env') === 'development' ? require('gulp-livereload') : null;
+var nodemon = app.get('env') === 'development' ? require('gulp-nodemon') : null;
+
 
 gulp.task('less', function() {
   gulp.src('./less/app.less')
