@@ -7,8 +7,8 @@ var react = require('gulp-react');
 var browserify = require('gulp-browserify');
 var minifyCss = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
-var livereload = app.get('env') === 'development' ? require('gulp-livereload') : null;
-var nodemon = app.get('env') === 'development' ? require('gulp-nodemon') : null;
+var livereload = process.env.NODE_ENV != 'production' ? require('gulp-livereload') : null;
+var nodemon = process.env.NODE_ENV != 'production' ? require('gulp-nodemon') : null;
 
 
 gulp.task('less', function() {
