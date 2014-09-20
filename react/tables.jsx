@@ -92,6 +92,10 @@ var Table = React.createClass({
       );
     }.bind(this));
 
+    function makeHeader(h, i) {
+      return (<Header key={i} name={h[1]} sort={this.sort} sortBy={this.state.sortBy} order={this.state.order} />);
+    }
+
     return (
       <div>
         <div className="clearfix">
@@ -102,7 +106,7 @@ var Table = React.createClass({
         <table className="table table-hover mainTable">
           <thead>
             <tr>
-              { this.props.headers.map(function(h, i) {return (<Header key={i} name={h[1]} sort={this.sort} />);}.bind(this)) }
+              { this.props.headers.map(makeHeader.bind(this)) }
             </tr>
           </thead>
           <tbody>
@@ -119,8 +123,14 @@ var Header = React.createClass({
     this.props.sort(this.props.key);
   },
   render: function() {
+    var classes = this.props.sortBy == this.props.key ? (this.props.order == '+' ? 'glyphicon-chevron-up' : 
+                                                                                   'glyphicon-chevron-down') :
+                  '';
     return (
-      <th onClick={this.handleClick}>{this.props.name}</th>
+      <th onClick={this.handleClick}>
+        {this.props.name}
+        &nbsp;&nbsp;<span className={'glyphicon ' + classes} />
+      </th>
     );
   }
 });
