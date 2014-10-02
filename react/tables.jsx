@@ -37,7 +37,7 @@ var Table = React.createClass({
   },
   handleKeypress: _.throttle(function() {
     this.setState({
-      filter: this.refs.search.getDOMNode().value 
+      filter: this.refs.search.getDOMNode().value
     });
   }, 100),
   sort: function(index) {
@@ -123,7 +123,7 @@ var Header = React.createClass({
     this.props.sort(this.props.key);
   },
   render: function() {
-    var classes = this.props.sortBy == this.props.key ? (this.props.order == '+' ? 'glyphicon-chevron-up' : 
+    var classes = this.props.sortBy == this.props.key ? (this.props.order == '+' ? 'glyphicon-chevron-up' :
                                                                                    'glyphicon-chevron-down') :
                   '';
     return (
@@ -137,8 +137,23 @@ var Header = React.createClass({
 
 
 var tableMeta = {
+  'fights': {
+    'headers': [
+      ['date', 'Date'],
+      ['stagename', 'Stage'],
+      ['winnername', 'Winner'],
+      ['p1name', 'Player 1'],
+      ['c1name', 'Character 1'],
+      ['p2name', 'Player 2'],
+      ['c2name', 'Character 2'],
+      ['p3name', 'Player 3'],
+      ['c3name', 'Character 3'],
+      ['p4name', 'Player 4'],
+      ['c4name', 'Character 4']
+    ]
+  },
   'playermeta': {
-    'headers': [ 
+    'headers': [
       ['name', 'Name'],
       ['total', 'Total Fights'],
       ['wins', 'Wins'],
@@ -146,7 +161,7 @@ var tableMeta = {
     ]
   },
   'charactermeta': {
-    'headers': [ 
+    'headers': [
       ['name', 'Name'],
       ['total', 'Total Fights'],
       ['wins', 'Wins'],

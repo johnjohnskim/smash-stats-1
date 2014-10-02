@@ -1,4 +1,5 @@
 module.exports = [
+  ['fights', 'All fights'],
   ['playermeta', 'Player Leaderboards'],
   ['charactermeta', 'Character Leaderboards'],
   ['characterwins', 'Best at: Character'],
