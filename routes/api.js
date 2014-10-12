@@ -50,7 +50,7 @@ var fightFields = {
 };
 router.route('/fights')
   .get(function(req, res) {
-    sql.getRows("SELECT * FROM fights", null, res, function(err, rows) {
+    sql.getRows("SELECT id, to_char(date, 'YYYY-MM-DD') as date, stagename, winnername, p1name, c1name, p2name, c2name, p3name, c3name, p4name, c4name FROM fights", null, res, function(err, rows) {
       res.json(rows);
     });
   })

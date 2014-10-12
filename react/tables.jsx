@@ -16,7 +16,7 @@ var Table = React.createClass({
   getInitialState: function() {
     return {
       data: [],
-      sortBy: -1,
+      sortBy: 0,
       order: '+',
       filter: ''
     };
@@ -142,6 +142,7 @@ var Header = React.createClass({
 var tableMeta = {
   'fights': {
     'headers': [
+      ['id', 'Id'],
       ['date', 'Date'],
       ['stagename', 'Stage'],
       ['winnername', 'Winner'],
