@@ -1,4 +1,11 @@
-CREATE VIEW stagewins AS 
+CREATE VIEW stagemeta AS
+ SELECT s.name,
+    ( SELECT count(*) AS count
+           FROM fights
+          WHERE fights.stage = s.id) AS total
+   FROM stages s;
+
+CREATE VIEW stagewins AS
  SELECT x.player,
     x.playername,
     x.stage,
@@ -22,7 +29,7 @@ CREATE VIEW stagewins AS
            FROM players p
             LEFT JOIN stages s ON true) x;
 
-CREATE VIEW playermeta AS 
+CREATE VIEW playermeta AS
  SELECT x.id,
     x.name,
     x.total,
@@ -40,7 +47,7 @@ CREATE VIEW playermeta AS
                   WHERE winner = p.id ) AS wins
            FROM players p) x;
 
-CREATE VIEW playervs AS 
+CREATE VIEW playervs AS
  SELECT x.pid1,
     x.pname1,
     x.pid2,
@@ -63,7 +70,7 @@ CREATE VIEW playervs AS
            FROM players p
              LEFT JOIN players q ON p.id != q.id) x;
 
-CREATE VIEW characterwins AS 
+CREATE VIEW characterwins AS
  SELECT  x.player,
      x.playername,
      x."character",
@@ -86,7 +93,7 @@ CREATE VIEW characterwins AS
            FROM players p
              LEFT JOIN characters c ON true) x;
 
-CREATE VIEW charactermeta AS 
+CREATE VIEW charactermeta AS
  SELECT x.id,
     x.name,
     x.total,
@@ -104,7 +111,7 @@ CREATE VIEW charactermeta AS
                   WHERE winnerchar=c.id ) AS wins
            FROM characters c) x;
 
-CREATE VIEW charactervs AS 
+CREATE VIEW charactervs AS
  SELECT x.cid1,
     x.cname1,
     x.cid2,
@@ -122,7 +129,7 @@ CREATE VIEW charactervs AS
             ( SELECT count(*) AS count
                    FROM findcfights(c.id, d.id) ) AS total,
             ( SELECT count(*) AS count
-                   FROM findcfights(c.id, d.id) 
+                   FROM findcfights(c.id, d.id)
                   WHERE winnerchar = c.id ) AS wins
            FROM characters c
              LEFT JOIN characters d ON c.id != d.id) x;

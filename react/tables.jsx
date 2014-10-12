@@ -8,6 +8,9 @@ function isNum(x) {
 function isPct(x) {
   return x.substring(x.length - 1) == '%';
 }
+function isDate(x) {
+  return /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(x);
+}
 
 var Table = React.createClass({
   getInitialState: function() {
@@ -103,7 +106,7 @@ var Table = React.createClass({
             <input type="text" className="form-control" placeholder="Search..." ref="search" onChange={this.handleKeypress} />
           </div>
         </div>
-        <table className="table table-hover mainTable">
+        <table className="table table-hover main-table">
           <thead>
             <tr>
               { this.props.headers.map(makeHeader.bind(this)) }
@@ -168,6 +171,12 @@ var tableMeta = {
       ['winpct', 'Win %']
     ]
   },
+  'stagemeta': {
+    'headers': [
+      ['name', 'Name'],
+      ['total', 'Appearances']
+    ]
+  },
   'characterwins': {
     'headers': [
       ['playername', 'Player'],
@@ -206,7 +215,14 @@ var tableMeta = {
   },
 }
 
+// table-type is given from the table router
 var tableType = $('#app')[0].getAttribute('type');
 if (tableType && tableMeta[tableType]) {
+  if (tableType == 'fights') {
+    $.getJSON('/api/fights', function(d) {
+      var h1 = $('h1');
+      h1.text('All ' + d.length + ' fights');
+    });
+  }
   React.renderComponent(<Table url={'/api/'+tableType} headers={tableMeta[tableType].headers} />, document.getElementById('app'));
 }

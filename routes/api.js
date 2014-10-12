@@ -91,7 +91,7 @@ router.route('/fights/:fid')
   })
 
 // REST
-var views = ['stages', 'stagewins', 
+var views = ['stages', 'stagemeta', 'stagewins',
   'characters', 'characterwins', 'charactermeta', 'charactervs',
   'playermeta', 'playervs', 'playertimeline', 'charactertimeline'];
 

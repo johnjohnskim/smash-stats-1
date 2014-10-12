@@ -1,15 +1,17 @@
 extends layout
 
 block content
+  a(href='/')
+    div.back-button.glyphicon.glyphicon-arrow-left
   div.container
     h1= title
     div.radio
       label
-        input(type="radio", name="graphType", onclick="changeStatType(this.value)", value="winpct", checked='checked') 
+        input(type="radio", name="graphType", onclick="changeStatType(this.value)", value="winpct", checked='checked')
         span Win %
     div.radio
       label
-        input(type="radio", name="graphType", onclick="changeStatType(this.value)", value="wins") 
+        input(type="radio", name="graphType", onclick="changeStatType(this.value)", value="wins")
         span Total Wins
     div#graph
   script(src='/js/timeline.js')
